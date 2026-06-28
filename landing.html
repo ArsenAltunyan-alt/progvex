@@ -99,6 +99,40 @@
       transition: transform 520ms ease;
     }
 
+    @media (hover: none) {
+      .orb-hover-card {
+        touch-action: none;
+      }
+
+      .orb-hover-card:hover {
+        filter: none;
+      }
+
+      .orb-hover-card:hover .orb-reveal-image {
+        opacity: 0;
+        transform: scale(1.04);
+        clip-path: circle(0% at var(--x) var(--y));
+      }
+
+      .orb-hover-card:hover .orb-base-image {
+        transform: none;
+      }
+
+      .orb-hover-card.is-hovered {
+        filter: saturate(1.04) contrast(1.02);
+      }
+
+      .orb-hover-card.is-hovered .orb-reveal-image {
+        opacity: 1;
+        transform: scale(1);
+        clip-path: circle(38% at var(--x) var(--y));
+      }
+
+      .orb-hover-card.is-hovered .orb-base-image {
+        transform: scale(1.012);
+      }
+    }
+
     .services-stage {
       min-height: 540px;
       overflow: visible;
@@ -755,6 +789,14 @@
     const orb = document.querySelector('.orb-hover-card');
 
     if (orb) {
+      const resetOrbPointer = () => {
+        orb.classList.remove('is-hovered');
+        orb.style.setProperty('--x', '50%');
+        orb.style.setProperty('--y', '50%');
+        orb.style.setProperty('--tilt-x', '0deg');
+        orb.style.setProperty('--tilt-y', '0deg');
+      };
+
       const setOrbPointer = (event) => {
         const rect = orb.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
@@ -769,15 +811,18 @@
         orb.style.setProperty('--tilt-x', `${-(clampedY - 50) / 18}deg`);
       };
 
+      orb.addEventListener('pointerdown', (event) => {
+        orb.setPointerCapture?.(event.pointerId);
+        setOrbPointer(event);
+      });
       orb.addEventListener('pointermove', setOrbPointer);
       orb.addEventListener('pointerenter', setOrbPointer);
-      orb.addEventListener('pointerleave', () => {
-        orb.classList.remove('is-hovered');
-        orb.style.setProperty('--x', '50%');
-        orb.style.setProperty('--y', '50%');
-        orb.style.setProperty('--tilt-x', '0deg');
-        orb.style.setProperty('--tilt-y', '0deg');
+      orb.addEventListener('pointerup', (event) => {
+        orb.releasePointerCapture?.(event.pointerId);
+        resetOrbPointer();
       });
+      orb.addEventListener('pointercancel', resetOrbPointer);
+      orb.addEventListener('pointerleave', resetOrbPointer);
     }
   </script>
 </body>
