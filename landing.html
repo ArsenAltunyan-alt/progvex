@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progvex - Разработка под ключ</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .font-fustat { font-family: 'Fustat', sans-serif; }
+    .font-inter { font-family: 'Inter', sans-serif; }
+
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .glass-nav-shadow {
+      box-shadow: inset 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+    }
+
+    .glass-btn-shadow {
+      box-shadow: inset 0px 4px 4px 0px rgba(255, 255, 255, 0.35);
+    }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .lang-btn {
+      min-width: 34px;
+      height: 30px;
+      border-radius: 9px;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .lang-btn:hover,
+    .lang-btn.is-active {
+      background: rgba(0, 132, 255, 0.12);
+      color: #0066cc;
+    }
+
+    .orb-hover-card {
+      --x: 50%;
+      --y: 50%;
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+      transition: transform 350ms ease, filter 350ms ease;
+      isolation: isolate;
+    }
+
+    .orb-hover-card:hover,
+    .orb-hover-card:focus-visible,
+    .orb-hover-card.is-hovered {
+      filter: saturate(1.04) contrast(1.02);
+    }
+
+    .orb-reveal-image {
+      opacity: 0;
+      transform: scale(1.04);
+      clip-path: circle(0% at var(--x) var(--y));
+      transition: opacity 220ms ease, clip-path 420ms cubic-bezier(.2, .8, .2, 1), transform 520ms ease;
+    }
+
+    .orb-hover-card:hover .orb-reveal-image,
+    .orb-hover-card:focus-visible .orb-reveal-image,
+    .orb-hover-card.is-hovered .orb-reveal-image {
+      opacity: 1;
+      transform: scale(1);
+      clip-path: circle(33% at var(--x) var(--y));
+    }
+
+    .orb-hover-card:hover .orb-base-image,
+    .orb-hover-card:focus-visible .orb-base-image,
+    .orb-hover-card.is-hovered .orb-base-image {
+      transform: scale(1.012);
+    }
+
+    .orb-base-image {
+      transition: transform 520ms ease;
+    }
+
+    .services-stage {
+      min-height: 540px;
+      overflow: visible;
+    }
+
+    .services-backdrop-word {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      font-family: 'Fustat', sans-serif;
+      font-size: clamp(92px, 17vw, 230px);
+      font-weight: 700;
+      line-height: 0.8;
+      color: rgba(15, 23, 42, 0.08);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    .service-float-card {
+      position: relative;
+      z-index: 2;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.30);
+      backdrop-filter: blur(50px);
+      box-shadow:
+        0 22px 54px rgba(15, 23, 42, 0.08),
+        inset 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+      transition: transform 300ms ease, background 300ms ease, box-shadow 300ms ease;
+    }
+
+    .service-float-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.44);
+      box-shadow:
+        0 26px 62px rgba(15, 23, 42, 0.10),
+        inset 0px 4px 4px 0px rgba(255, 255, 255, 0.32);
+    }
+
+    .service-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 132, 255, 0.8);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      box-shadow: inset 0px 4px 4px 0px rgba(255, 255, 255, 0.35);
+      transition: transform 300ms ease;
+    }
+
+    .service-card-link:hover {
+      transform: scale(1.02);
+    }
+
+    @media (min-width: 768px) {
+      .service-card-left {
+        position: absolute;
+        left: 0;
+        top: 34%;
+        width: 30%;
+      }
+
+      .service-card-center {
+        position: absolute;
+        left: 35%;
+        top: 49%;
+        width: 30%;
+      }
+
+      .service-card-right {
+        position: absolute;
+        right: 0;
+        top: 23%;
+        width: 30%;
+      }
+    }
+
+    .process-top {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .process-description {
+      max-width: 760px;
+    }
+
+    .process-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .process-card {
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.40);
+      backdrop-filter: blur(50px);
+      box-shadow:
+        0 18px 44px rgba(15, 23, 42, 0.07),
+        inset 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+      transition: transform 260ms ease, background 260ms ease, color 260ms ease;
+    }
+
+    .process-card.is-active {
+      background: rgba(0, 132, 255, 0.8);
+      color: #ffffff;
+    }
+
+    .process-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .process-card-title {
+      color: inherit;
+    }
+
+    .process-step-label {
+      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .process-card.is-active .process-step-label {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .process-arrow {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.56);
+      color: #0084ff;
+      transition: transform 220ms ease, background 220ms ease;
+    }
+
+    .process-arrow:hover {
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .process-controls {
+      display: flex;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .process-controls .process-arrow {
+      width: 44px;
+      height: 32px;
+      border-radius: 12px;
+    }
+
+    .process-controls .process-arrow:hover[data-process-direction="next"] {
+      transform: translateX(2px);
+    }
+
+    .process-controls .process-arrow:hover[data-process-direction="prev"] {
+      transform: translateX(-2px);
+    }
+
+    @media (max-width: 767px) {
+      .process-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .process-card {
+        min-height: 190px;
+      }
+    }
+  </style>
+</head>
+<body id="top" class="bg-white font-inter text-slate-900 overflow-x-hidden antialiased">
+
+  <div class="w-full max-w-[1600px] mx-auto px-6 md:px-12 relative">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[220px] pointer-events-none z-0">
+      <div class="absolute top-[-50px] left-1/4 w-[300px] h-[180px] rounded-full bg-[#60B1FF] opacity-30 blur-[60px]"></div>
+      <div class="absolute top-[-30px] right-1/4 w-[250px] h-[150px] rounded-full bg-[#319AFF] opacity-20 blur-[50px]"></div>
+    </div>
+
+    <header class="sticky top-[30px] mx-auto w-full max-w-fit z-50 pt-2 mb-10 md:mb-14">
+      <nav class="flex items-center justify-between gap-5 md:gap-10 px-5 md:px-6 py-3 bg-white/30 backdrop-blur-[50px] rounded-[16px] border border-black/10 glass-nav-shadow">
+        <a href="#top" class="font-fustat text-xl tracking-tight text-slate-900 flex items-center gap-2">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8 9l-4 3 4 3m8-6l4 3-4 3M14 5l-4 14"></path>
+          </svg>
+          Progvex
+        </a>
+
+        <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
+          <a href="#top" class="hover:text-black transition-colors" data-i18n="nav.home">Главная</a>
+          <a href="#services" class="hover:text-black transition-colors" data-i18n="nav.services">Услуги</a>
+          <a href="#process" class="hover:text-black transition-colors" data-i18n="nav.stack">Стек</a>
+          <a href="#contact" class="hover:text-black transition-colors" data-i18n="nav.contact">Контакт</a>
+        </div>
+
+        <div class="lang-switch" role="group" aria-label="Language selector">
+          <button class="lang-btn is-active" type="button" data-lang="ru" aria-pressed="true">RU</button>
+          <button class="lang-btn" type="button" data-lang="uk" aria-pressed="false">UA</button>
+          <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="home" class="relative z-10">
+      <section class="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center min-h-[520px] pb-10">
+        <div class="lg:col-span-7 flex flex-col items-start space-y-5 text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-100">
+            <span class="w-2 h-2 rounded-full bg-[#0084FF]"></span>
+            <span class="text-xs font-medium text-slate-600 tracking-tight" data-i18n="hero.badge">Разработка без посредников - напрямую с разработчиком</span>
+          </div>
+
+          <h1 class="font-fustat text-5xl md:text-[68px] font-bold text-slate-950 leading-[1.05] tracking-[-2px]" data-i18n="hero.title">
+            Пишешь задачу -<br class="hidden md:inline">получаешь продукт
+          </h1>
+
+          <p class="max-w-[530px] text-base md:text-[18px] text-slate-600 font-normal leading-relaxed tracking-[-1px]" data-i18n="hero.subtitle">
+            Лендинги, Telegram Mini Apps, боты и веб-приложения. Четко, в срок, без лишних слов.
+          </p>
+
+          <a href="https://t.me/progvex" class="service-card-link">
+            <span data-i18n="hero.cta">Обсудить проект</span>
+            <span class="w-5 h-5 flex items-center justify-center bg-white text-blue-600 rounded-full transition-transform group-hover:translate-x-0.5">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </a>
+        </div>
+
+        <div class="lg:col-span-5 flex justify-center lg:justify-end">
+          <div class="orb-hover-card relative w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] lg:w-[420px] lg:h-[420px] flex items-center justify-center outline-none" tabindex="0" aria-label="Интерактивный мокап Progvex" data-i18n-aria-label="orb.label">
+            <img src="Image1.png" alt="Светлый мокап сайта Progvex" data-i18n-alt="orb.imageAlt" class="orb-base-image absolute inset-0 w-full h-full object-contain select-none pointer-events-none">
+            <img src="Image2.png" alt="" aria-hidden="true" class="orb-reveal-image absolute inset-0 w-full h-full object-contain select-none pointer-events-none z-10">
+          </div>
+        </div>
+      </section>
+
+      <section id="services" class="w-full max-w-6xl mx-auto py-10 md:py-12">
+        <div class="services-stage relative py-8 md:py-10">
+          <div class="relative z-10 max-w-[680px] mb-8 md:mb-0">
+            <p class="text-sm font-semibold text-blue-600 mb-2" data-i18n="services.eyebrow">Услуги</p>
+            <h2 class="font-fustat text-4xl md:text-5xl font-bold text-slate-950 tracking-[-1px] mb-3" data-i18n="services.title">Что можно собрать</h2>
+            <p class="text-slate-600 leading-relaxed tracking-[-0.5px]" data-i18n="services.subtitle">От простого лендинга до сервиса с авторизацией и интеграциями.</p>
+          </div>
+
+          <div class="services-backdrop-word" data-i18n="services.backdrop">УСЛУГИ</div>
+
+          <div class="relative z-10 grid grid-cols-1 gap-5 md:block md:min-h-[390px]">
+            <article class="service-float-card service-card-left p-6">
+              <h3 class="font-fustat text-2xl font-bold text-slate-950 mb-5" data-i18n="services.landing.title">Лендинги</h3>
+              <p class="text-sm leading-relaxed text-slate-600 mb-7" data-i18n="services.landing.text">Быстрая загрузка, четкая структура, адаптив. Под продажу, лид-форму или портфолио.</p>
+              <a href="https://t.me/progvex" class="service-card-link">
+                <span data-i18n="services.cardCta">Заказать</span>
+                <span class="w-5 h-5 flex items-center justify-center bg-white text-blue-600 rounded-full transition-transform">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </article>
+
+            <article class="service-float-card service-card-center p-6">
+              <h3 class="font-fustat text-2xl font-bold text-slate-950 mb-5" data-i18n="services.telegram.title">Telegram Mini Apps и боты</h3>
+              <p class="text-sm leading-relaxed text-slate-600 mb-7" data-i18n="services.telegram.text">Каталоги, квизы, личные кабинеты, автоответы и интеграции. Там, где уже сидит аудитория.</p>
+              <a href="https://t.me/progvex" class="service-card-link">
+                <span data-i18n="services.cardCta">Заказать</span>
+                <span class="w-5 h-5 flex items-center justify-center bg-white text-blue-600 rounded-full transition-transform">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </article>
+
+            <article class="service-float-card service-card-right p-6">
+              <h3 class="font-fustat text-2xl font-bold text-slate-950 mb-5" data-i18n="services.web.title">Веб-приложения</h3>
+              <p class="text-sm leading-relaxed text-slate-600 mb-7" data-i18n="services.web.text">Авторизация, база данных, API. Кастомный сервис под твою бизнес-логику.</p>
+              <a href="https://t.me/progvex" class="service-card-link">
+                <span data-i18n="services.cardCta">Заказать</span>
+                <span class="w-5 h-5 flex items-center justify-center bg-white text-blue-600 rounded-full transition-transform">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="process" class="w-full max-w-6xl mx-auto py-10 md:py-12">
+        <div class="process-top">
+          <p class="text-sm font-semibold text-blue-600" data-i18n="process.eyebrow">Процесс</p>
+          <h2 class="font-fustat text-4xl md:text-5xl font-bold text-slate-950 tracking-[-1px]" data-i18n="process.title">Как работаем</h2>
+          <div class="process-description">
+            <p class="text-sm md:text-base leading-relaxed text-slate-600 tracking-[-0.3px]" data-process-description-text>Пишешь в Telegram и описываешь, что нужно получить в итоге. Собираем контекст: цель, аудиторию, примеры и важные ограничения.</p>
+          </div>
+        </div>
+
+        <div class="process-card-grid">
+          <article class="process-card is-active p-6" data-process-card="1">
+            <h3 class="process-card-title font-fustat text-2xl md:text-3xl font-bold leading-tight tracking-[-0.5px]" data-i18n="process.step1.title">Описываешь задачу</h3>
+            <span class="process-step-label" data-i18n="process.step1.label">Шаг 01</span>
+          </article>
+
+          <article class="process-card p-6" data-process-card="2">
+            <h3 class="process-card-title font-fustat text-2xl md:text-3xl font-bold leading-tight tracking-[-0.5px]" data-i18n="process.step2.title">Согласовываем</h3>
+            <span class="process-step-label" data-i18n="process.step2.label">Шаг 02</span>
+          </article>
+
+          <article class="process-card p-6" data-process-card="3">
+            <h3 class="process-card-title font-fustat text-2xl md:text-3xl font-bold leading-tight tracking-[-0.5px]" data-i18n="process.step3.title">Получаешь продукт</h3>
+            <span class="process-step-label" data-i18n="process.step3.label">Шаг 03</span>
+          </article>
+        </div>
+
+        <div class="process-controls">
+          <button class="process-arrow" type="button" data-process-direction="prev" aria-label="Предыдущий этап" data-i18n-aria-label="process.prevStep">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+          </button>
+          <button class="process-arrow" type="button" data-process-direction="next" aria-label="Следующий этап" data-i18n-aria-label="process.nextStep">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <section id="contact" class="relative w-full max-w-5xl mx-auto py-16 md:py-20 text-center overflow-visible">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[460px] max-w-[82vw] h-[190px] rounded-full bg-[#60B1FF] opacity-18 blur-[48px] pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col items-center">
+          <h2 class="font-fustat text-4xl md:text-5xl font-bold text-slate-950 tracking-[-1px] mb-3" data-i18n="contact.title">Есть задача?</h2>
+          <p class="text-base md:text-[18px] text-slate-600 mb-7 tracking-[-0.5px]" data-i18n="contact.subtitle">Напиши - разберемся.</p>
+          <a href="https://t.me/progvex" class="service-card-link">
+            <span data-i18n="contact.cta">Написать в Telegram</span>
+            <span class="w-5 h-5 flex items-center justify-center bg-white text-blue-600 rounded-full transition-transform group-hover:translate-x-0.5">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="w-full pt-7 pb-8 border-t border-slate-100 flex flex-col items-center gap-5 z-10">
+      <p class="text-xs text-slate-400" data-i18n="footer.copy">© 2025 Progvex · Разработка под ключ</p>
+    </footer>
+  </div>
+
+  <script>
+    const translations = {
+      ru: {
+        title: 'Progvex - Разработка под ключ',
+        nav: { home: 'Главная', services: 'Услуги', stack: 'Стек', contact: 'Контакт' },
+        hero: {
+          badge: 'Разработка без посредников - напрямую с разработчиком',
+          title: 'Пишешь задачу -<br class="hidden md:inline">получаешь продукт',
+          subtitle: 'Лендинги, Telegram Mini Apps, боты и веб-приложения. Четко, в срок, без лишних слов.',
+          cta: 'Обсудить проект'
+        },
+        orb: {
+          label: 'Интерактивный мокап Progvex',
+          imageAlt: 'Светлый мокап сайта Progvex'
+        },
+        services: {
+          eyebrow: 'Услуги',
+          title: 'Что можно собрать',
+          backdrop: 'УСЛУГИ',
+          cardCta: 'Заказать',
+          subtitle: 'От простого лендинга до сервиса с авторизацией и интеграциями.',
+          landing: {
+            title: 'Лендинги',
+            text: 'Быстрая загрузка, четкая структура, адаптив. Под продажу, лид-форму или портфолио.'
+          },
+          telegram: {
+            title: 'Telegram Mini Apps и боты',
+            text: 'Каталоги, квизы, личные кабинеты, автоответы и интеграции. Там, где уже сидит аудитория.'
+          },
+          web: {
+            title: 'Веб-приложения',
+            text: 'Авторизация, база данных, API. Кастомный сервис под твою бизнес-логику.'
+          }
+        },
+        process: {
+          eyebrow: 'Процесс',
+          title: 'Как работаем',
+          showStep: 'Показать описание этапа',
+          prevStep: 'Предыдущий этап',
+          nextStep: 'Следующий этап',
+          step1: {
+            title: 'Описываешь задачу',
+            label: 'Шаг 01',
+            note1: 'Пишешь в Telegram и описываешь, что нужно получить в итоге.',
+            note2: 'Собираем контекст: цель, аудиторию, примеры и важные ограничения.'
+          },
+          step2: {
+            title: 'Согласовываем',
+            label: 'Шаг 02',
+            note1: 'Фиксируем объем, стек, сроки и цену до начала работы.',
+            note2: 'Разбиваем задачу на понятные этапы без лишней бюрократии.'
+          },
+          step3: {
+            title: 'Получаешь продукт',
+            label: 'Шаг 03',
+            note1: 'Передаю готовый результат, который можно сразу проверять и запускать.',
+            note2: 'Делаем финальные правки по договоренности и закрываем задачу.'
+          }
+        },
+        contact: {
+          title: 'Есть задача?',
+          subtitle: 'Напиши - разберемся.',
+          cta: 'Написать в Telegram'
+        },
+        footer: {
+          trust: 'Нам доверяют продуктовые команды и цифровые проекты',
+          copy: '© 2025 Progvex · Разработка под ключ'
+        }
+      },
+      uk: {
+        title: 'Progvex - Розробка під ключ',
+        nav: { home: 'Головна', services: 'Послуги', stack: 'Стек', contact: 'Контакт' },
+        hero: {
+          badge: 'Розробка без посередників - напряму з розробником',
+          title: 'Пишеш задачу -<br class="hidden md:inline">отримуєш продукт',
+          subtitle: 'Лендінги, Telegram Mini Apps, боти та веб-застосунки. Чітко, вчасно, без зайвих слів.',
+          cta: 'Обговорити проєкт'
+        },
+        orb: {
+          label: 'Інтерактивний мокап Progvex',
+          imageAlt: 'Світлий мокап сайту Progvex'
+        },
+        services: {
+          eyebrow: 'Послуги',
+          title: 'Що можна зібрати',
+          backdrop: 'ПОСЛУГИ',
+          cardCta: 'Замовити',
+          subtitle: 'Від простого лендінгу до сервісу з авторизацією та інтеграціями.',
+          landing: {
+            title: 'Лендінги',
+            text: 'Швидке завантаження, чітка структура, адаптив. Під продаж, лід-форму або портфоліо.'
+          },
+          telegram: {
+            title: 'Telegram Mini Apps і боти',
+            text: 'Каталоги, квізи, особисті кабінети, автовідповіді та інтеграції. Там, де вже є аудиторія.'
+          },
+          web: {
+            title: 'Веб-застосунки',
+            text: 'Авторизація, база даних, API. Кастомний сервіс під твою бізнес-логіку.'
+          }
+        },
+        process: {
+          eyebrow: 'Процес',
+          title: 'Як працюємо',
+          showStep: 'Показати опис етапу',
+          prevStep: 'Попередній етап',
+          nextStep: 'Наступний етап',
+          step1: {
+            title: 'Описуєш задачу',
+            label: 'Крок 01',
+            note1: 'Пишеш у Telegram і описуєш, що потрібно отримати в результаті.',
+            note2: 'Збираємо контекст: ціль, аудиторію, приклади та важливі обмеження.'
+          },
+          step2: {
+            title: 'Узгоджуємо',
+            label: 'Крок 02',
+            note1: 'Фіксуємо обсяг, стек, строки та ціну до початку роботи.',
+            note2: 'Розбиваємо задачу на зрозумілі етапи без зайвої бюрократії.'
+          },
+          step3: {
+            title: 'Отримуєш продукт',
+            label: 'Крок 03',
+            note1: 'Передаю готовий результат, який можна одразу перевіряти й запускати.',
+            note2: 'Робимо фінальні правки за домовленістю та закриваємо задачу.'
+          }
+        },
+        contact: {
+          title: 'Є задача?',
+          subtitle: 'Напиши - розберемося.',
+          cta: 'Написати в Telegram'
+        },
+        footer: {
+          trust: 'Нам довіряють продуктові команди та цифрові проєкти',
+          copy: '© 2025 Progvex · Розробка під ключ'
+        }
+      },
+      en: {
+        title: 'Progvex - Turnkey development',
+        nav: { home: 'Home', services: 'Services', stack: 'Stack', contact: 'Contact' },
+        hero: {
+          badge: 'Development without middlemen - directly with the developer',
+          title: 'Send the task -<br class="hidden md:inline">get the product',
+          subtitle: 'Landing pages, Telegram Mini Apps, bots, and web applications. Clear, on time, without extra noise.',
+          cta: 'Discuss project'
+        },
+        orb: {
+          label: 'Interactive Progvex mockup',
+          imageAlt: 'Light Progvex website mockup'
+        },
+        services: {
+          eyebrow: 'Services',
+          title: 'What we can build',
+          backdrop: 'SERVICES',
+          cardCta: 'Order',
+          subtitle: 'From a simple landing page to a service with auth and integrations.',
+          landing: {
+            title: 'Landing pages',
+            text: 'Fast loading, clear structure, responsive layout. Built for sales, lead forms, or portfolios.'
+          },
+          telegram: {
+            title: 'Telegram Mini Apps and bots',
+            text: 'Catalogs, quizzes, accounts, auto-replies, and integrations. Built where your audience already is.'
+          },
+          web: {
+            title: 'Web applications',
+            text: 'Authentication, database, API. A custom service for your business logic.'
+          }
+        },
+        process: {
+          eyebrow: 'Process',
+          title: 'How it works',
+          showStep: 'Show step description',
+          prevStep: 'Previous step',
+          nextStep: 'Next step',
+          step1: {
+            title: 'Describe the task',
+            label: 'Step 01',
+            note1: 'Message in Telegram and describe the result you need.',
+            note2: 'We collect context: goal, audience, references, and key limits.'
+          },
+          step2: {
+            title: 'We align',
+            label: 'Step 02',
+            note1: 'We fix the scope, stack, timeline, and price before development starts.',
+            note2: 'We split the task into clear stages without extra bureaucracy.'
+          },
+          step3: {
+            title: 'You get the product',
+            label: 'Step 03',
+            note1: 'You receive a finished result that is ready to test and launch.',
+            note2: 'We make final agreed edits and close the task cleanly.'
+          }
+        },
+        contact: {
+          title: 'Have a task?',
+          subtitle: 'Message me - we will figure it out.',
+          cta: 'Write in Telegram'
+        },
+        footer: {
+          trust: 'Trusted by product teams and digital projects',
+          copy: '© 2025 Progvex · Turnkey development'
+        }
+      }
+    };
+
+    const getText = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
+    let activeProcessStep = '1';
+
+    const updateProcessDescription = (lang) => {
+      const dictionary = translations[lang] || translations.ru;
+      const step = dictionary.process[`step${activeProcessStep}`];
+      const title = document.querySelector('[data-process-description-title]');
+      const text = document.querySelector('[data-process-description-text]');
+
+      if (title && step?.title) title.textContent = step.title;
+      if (text && step?.note1 && step?.note2) text.textContent = `${step.note1} ${step.note2}`;
+
+      document.querySelectorAll('[data-process-card]').forEach((card) => {
+        card.classList.toggle('is-active', card.dataset.processCard === activeProcessStep);
+      });
+    };
+
+    const setLanguage = (lang) => {
+      const dictionary = translations[lang] || translations.ru;
+
+      document.documentElement.lang = lang === 'uk' ? 'uk' : lang;
+      document.title = dictionary.title;
+
+      document.querySelectorAll('[data-i18n]').forEach((element) => {
+        const text = getText(dictionary, element.dataset.i18n);
+        if (text) element.innerHTML = text;
+      });
+
+      document.querySelectorAll('[data-i18n-alt]').forEach((element) => {
+        const text = getText(dictionary, element.dataset.i18nAlt);
+        if (text) element.setAttribute('alt', text);
+      });
+
+      document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+        const text = getText(dictionary, element.dataset.i18nAriaLabel);
+        if (text) element.setAttribute('aria-label', text);
+      });
+
+      document.querySelectorAll('[data-lang]').forEach((button) => {
+        const isActive = button.dataset.lang === lang;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+      });
+
+      localStorage.setItem('progvex-lang', lang);
+      updateProcessDescription(lang);
+    };
+
+    document.querySelectorAll('[data-lang]').forEach((button) => {
+      button.addEventListener('click', () => setLanguage(button.dataset.lang));
+    });
+
+    document.querySelectorAll('[data-process-card]').forEach((card) => {
+      card.addEventListener('click', () => {
+        activeProcessStep = card.dataset.processCard;
+        const currentLanguage = localStorage.getItem('progvex-lang') || document.documentElement.lang || 'ru';
+        updateProcessDescription(currentLanguage);
+      });
+    });
+
+    document.querySelectorAll('[data-process-direction]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const current = Number(activeProcessStep);
+        const direction = button.dataset.processDirection;
+        activeProcessStep = direction === 'next'
+          ? String(current === 3 ? 1 : current + 1)
+          : String(current === 1 ? 3 : current - 1);
+        const currentLanguage = localStorage.getItem('progvex-lang') || document.documentElement.lang || 'ru';
+        updateProcessDescription(currentLanguage);
+      });
+    });
+
+    const savedLanguage = localStorage.getItem('progvex-lang');
+    const browserLanguage = navigator.language?.toLowerCase().startsWith('uk') ? 'uk' : navigator.language?.toLowerCase().startsWith('en') ? 'en' : 'ru';
+    setLanguage(savedLanguage || browserLanguage);
+
+    const orb = document.querySelector('.orb-hover-card');
+
+    if (orb) {
+      const setOrbPointer = (event) => {
+        const rect = orb.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        const clampedX = Math.max(0, Math.min(100, x));
+        const clampedY = Math.max(0, Math.min(100, y));
+
+        orb.classList.add('is-hovered');
+        orb.style.setProperty('--x', `${clampedX}%`);
+        orb.style.setProperty('--y', `${clampedY}%`);
+        orb.style.setProperty('--tilt-y', `${(clampedX - 50) / 18}deg`);
+        orb.style.setProperty('--tilt-x', `${-(clampedY - 50) / 18}deg`);
+      };
+
+      orb.addEventListener('pointermove', setOrbPointer);
+      orb.addEventListener('pointerenter', setOrbPointer);
+      orb.addEventListener('pointerleave', () => {
+        orb.classList.remove('is-hovered');
+        orb.style.setProperty('--x', '50%');
+        orb.style.setProperty('--y', '50%');
+        orb.style.setProperty('--tilt-x', '0deg');
+        orb.style.setProperty('--tilt-y', '0deg');
+      });
+    }
+  </script>
+</body>
+</html>
+
