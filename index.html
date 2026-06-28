@@ -66,6 +66,7 @@
       transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
       transition: transform 350ms ease, filter 350ms ease;
       isolation: isolate;
+      will-change: transform;
     }
 
     .orb-hover-card:hover,
@@ -79,6 +80,7 @@
       transform: scale(1.04);
       clip-path: circle(0% at var(--x) var(--y));
       transition: opacity 220ms ease, clip-path 420ms cubic-bezier(.2, .8, .2, 1), transform 520ms ease;
+      will-change: clip-path, opacity, transform;
     }
 
     .orb-hover-card:hover .orb-reveal-image,
@@ -102,6 +104,7 @@
     @media (hover: none) {
       .orb-hover-card {
         touch-action: none;
+        transform: none;
       }
 
       .orb-hover-card:hover {
@@ -125,11 +128,12 @@
       .orb-hover-card.is-hovered .orb-reveal-image {
         opacity: 1;
         transform: scale(1);
-        clip-path: circle(38% at var(--x) var(--y));
+        clip-path: circle(36% at var(--x) var(--y));
+        transition: opacity 120ms ease, clip-path 120ms linear;
       }
 
       .orb-hover-card.is-hovered .orb-base-image {
-        transform: scale(1.012);
+        transform: none;
       }
     }
 
@@ -789,7 +793,16 @@
     const orb = document.querySelector('.orb-hover-card');
 
     if (orb) {
+      const canHover = window.matchMedia('(hover: hover)').matches;
+      let pendingOrbEvent = null;
+      let orbFrame = null;
+
       const resetOrbPointer = () => {
+        pendingOrbEvent = null;
+        if (orbFrame) {
+          cancelAnimationFrame(orbFrame);
+          orbFrame = null;
+        }
         orb.classList.remove('is-hovered');
         orb.style.setProperty('--x', '50%');
         orb.style.setProperty('--y', '50%');
@@ -797,7 +810,7 @@
         orb.style.setProperty('--tilt-y', '0deg');
       };
 
-      const setOrbPointer = (event) => {
+      const applyOrbPointer = (event) => {
         const rect = orb.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
@@ -807,8 +820,18 @@
         orb.classList.add('is-hovered');
         orb.style.setProperty('--x', `${clampedX}%`);
         orb.style.setProperty('--y', `${clampedY}%`);
-        orb.style.setProperty('--tilt-y', `${(clampedX - 50) / 18}deg`);
-        orb.style.setProperty('--tilt-x', `${-(clampedY - 50) / 18}deg`);
+        orb.style.setProperty('--tilt-y', canHover ? `${(clampedX - 50) / 18}deg` : '0deg');
+        orb.style.setProperty('--tilt-x', canHover ? `${-(clampedY - 50) / 18}deg` : '0deg');
+      };
+
+      const setOrbPointer = (event) => {
+        pendingOrbEvent = event;
+        if (orbFrame) return;
+
+        orbFrame = requestAnimationFrame(() => {
+          if (pendingOrbEvent) applyOrbPointer(pendingOrbEvent);
+          orbFrame = null;
+        });
       };
 
       orb.addEventListener('pointerdown', (event) => {
