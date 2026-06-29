@@ -19,6 +19,7 @@
 
     #services,
     #process,
+    #portfolio,
     #contact {
       scroll-margin-top: 130px;
     }
@@ -26,6 +27,7 @@
     @media (max-width: 767px) {
       #services,
       #process,
+      #portfolio,
       #contact {
         scroll-margin-top: 105px;
       }
@@ -332,6 +334,129 @@
       transform: translateX(-2px);
     }
 
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.78fr);
+      grid-template-rows: repeat(2, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .portfolio-card {
+      position: relative;
+      min-height: 240px;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(50px);
+      box-shadow:
+        0 18px 44px rgba(15, 23, 42, 0.07),
+        inset 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+      transition: transform 280ms ease, box-shadow 280ms ease;
+    }
+
+    .portfolio-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 24px 58px rgba(15, 23, 42, 0.10),
+        inset 0px 4px 4px 0px rgba(255, 255, 255, 0.30);
+    }
+
+    .portfolio-card-tall {
+      grid-row: span 2;
+      min-height: 496px;
+    }
+
+    .portfolio-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .portfolio-card-derma .portfolio-image {
+      object-position: center 36%;
+    }
+
+    .portfolio-card-bistro .portfolio-image {
+      left: auto;
+      width: 48%;
+      object-fit: contain;
+      object-position: right center;
+      padding: 14px;
+    }
+
+    .portfolio-card-marketplace .portfolio-image {
+      object-position: center top;
+    }
+
+    .portfolio-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 42%, rgba(255, 255, 255, 0.18) 100%);
+    }
+
+    .portfolio-card-bistro .portfolio-overlay {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 46%, rgba(255, 255, 255, 0.10) 100%);
+    }
+
+    .portfolio-card-marketplace .portfolio-overlay {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.76) 44%, rgba(255, 255, 255, 0.20) 100%);
+    }
+
+    .portfolio-content {
+      position: relative;
+      z-index: 1;
+      width: min(360px, 78%);
+      height: 100%;
+      min-height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 28px;
+    }
+
+    .portfolio-card-tall .portfolio-content {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .portfolio-placeholder {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 18%, rgba(96, 177, 255, 0.28), transparent 34%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(241, 245, 249, 0.50));
+    }
+
+    .portfolio-empty-mark {
+      position: absolute;
+      right: 28px;
+      top: 24px;
+      color: rgba(15, 23, 42, 0.08);
+      font-family: 'Fustat', sans-serif;
+      font-size: 120px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .portfolio-disabled-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(241, 245, 249, 0.72);
+      color: #64748b;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: not-allowed;
+      backdrop-filter: blur(30px);
+    }
+
     @media (max-width: 767px) {
       .process-card-grid {
         grid-template-columns: 1fr;
@@ -339,6 +464,38 @@
 
       .process-card {
         min-height: 190px;
+      }
+
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+      }
+
+      .portfolio-card,
+      .portfolio-card-tall {
+        min-height: 280px;
+      }
+
+      .portfolio-card-tall {
+        grid-row: auto;
+      }
+
+      .portfolio-content {
+        width: 100%;
+        justify-content: flex-end;
+        padding: 22px;
+      }
+
+      .portfolio-overlay,
+      .portfolio-card-bistro .portfolio-overlay,
+      .portfolio-card-marketplace .portfolio-overlay {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.92) 100%);
+      }
+
+      .portfolio-card-bistro .portfolio-image {
+        width: 100%;
+        height: 68%;
+        object-position: center top;
       }
     }
   </style>
@@ -362,6 +519,7 @@
           <a href="#top" class="hover:text-black transition-colors" data-i18n="nav.home">Главная</a>
           <a href="#services" class="hover:text-black transition-colors" data-i18n="nav.services">Услуги</a>
           <a href="#process" class="hover:text-black transition-colors" data-i18n="nav.stack">Процесс</a>
+          <a href="#portfolio" class="hover:text-black transition-colors" data-i18n="nav.portfolio">Портфолио</a>
           <a href="#contact" class="hover:text-black transition-colors" data-i18n="nav.contact">Контакт</a>
         </div>
 
@@ -501,6 +659,57 @@
         </div>
       </section>
 
+      <section id="portfolio" class="w-full max-w-6xl mx-auto py-10 md:py-12">
+        <div class="process-top">
+          <p class="text-sm font-semibold text-blue-600" data-i18n="portfolio.eyebrow">Портфолио</p>
+          <h2 class="font-fustat text-4xl md:text-5xl font-bold text-slate-950 tracking-[-1px]" data-i18n="portfolio.title">Проекты</h2>
+          <p class="max-w-2xl text-sm md:text-base leading-relaxed text-slate-600 tracking-[-0.3px]" data-i18n="portfolio.subtitle">Примеры интерфейсов, которые можно собрать под твою задачу.</p>
+        </div>
+
+        <div class="portfolio-grid">
+          <article class="portfolio-card portfolio-card-derma">
+            <img src="portfolio-dermaclear.png" alt="" class="portfolio-image" loading="lazy">
+            <div class="portfolio-overlay"></div>
+            <div class="portfolio-content">
+              <h3 class="font-fustat text-2xl md:text-3xl font-bold leading-tight text-slate-950 mb-3" data-i18n="portfolio.derma.title">DermaClear</h3>
+              <p class="text-sm leading-relaxed text-slate-600 mb-6" data-i18n="portfolio.derma.text">Лендинг для skincare-продукта с чистым первым экраном, крупным визуалом и понятным оффером.</p>
+              <a href="https://dermaclear.is-best.net/" class="service-card-link">
+                <span data-i18n="portfolio.cta">Перейти</span>
+                <span class="w-5 h-5 flex items-center justify-center bg-white text-blue-600 rounded-full transition-transform">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </article>
+
+          <article class="portfolio-card portfolio-card-tall portfolio-card-bistro">
+            <img src="portfolio-bistroflow.png" alt="" class="portfolio-image" loading="lazy">
+            <div class="portfolio-overlay"></div>
+            <div class="portfolio-content">
+              <h3 class="font-fustat text-2xl md:text-3xl font-bold leading-tight text-slate-950 mb-3" data-i18n="portfolio.bistro.title">BistroFlow</h3>
+              <p class="text-sm leading-relaxed text-slate-600 mb-6" data-i18n="portfolio.bistro.text">Мобильный интерфейс бронирования: выбор даты, времени, стола и короткое подтверждение заказа.</p>
+              <button class="portfolio-disabled-link" type="button" disabled>
+                <span data-i18n="portfolio.privateCta">Проект под NDA</span>
+              </button>
+            </div>
+          </article>
+
+          <article class="portfolio-card portfolio-card-marketplace">
+            <img src="portfolio-marketplace.png" alt="" class="portfolio-image" loading="lazy">
+            <div class="portfolio-overlay"></div>
+            <div class="portfolio-content">
+              <h3 class="font-fustat text-2xl md:text-3xl font-bold leading-tight text-slate-950 mb-3" data-i18n="portfolio.marketplace.title">Marketplace</h3>
+              <p class="text-sm leading-relaxed text-slate-600 mb-6" data-i18n="portfolio.marketplace.text">Каталог товаров с карточками, сортировкой, быстрым просмотром и AI-чатом для поддержки.</p>
+              <button class="portfolio-disabled-link" type="button" disabled>
+                <span data-i18n="portfolio.privateCta">Проект под NDA</span>
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section id="contact" class="relative w-full max-w-5xl mx-auto py-16 md:py-20 text-center overflow-visible">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[460px] max-w-[82vw] h-[190px] rounded-full bg-[#60B1FF] opacity-18 blur-[48px] pointer-events-none"></div>
         <div class="relative z-10 flex flex-col items-center">
@@ -527,7 +736,7 @@
     const translations = {
       ru: {
         title: 'Progvex - Разработка под ключ',
-        nav: { home: 'Главная', services: 'Услуги', stack: 'Процесс', contact: 'Контакт' },
+        nav: { home: 'Главная', services: 'Услуги', stack: 'Процесс', portfolio: 'Портфолио', contact: 'Контакт' },
         hero: {
           badge: 'Разработка без посредников - напрямую с разработчиком',
           badgeMobile: 'Разработка без посредников',
@@ -583,6 +792,25 @@
             note2: 'Делаем финальные правки по договоренности и закрываем задачу.'
           }
         },
+        portfolio: {
+          eyebrow: 'Портфолио',
+          title: 'Проекты',
+          subtitle: 'Примеры интерфейсов, которые можно собрать под твою задачу.',
+          cta: 'Перейти',
+          privateCta: 'Проект под NDA',
+          derma: {
+            title: 'DermaClear',
+            text: 'Лендинг для skincare-продукта с чистым первым экраном, крупным визуалом и понятным оффером.'
+          },
+          marketplace: {
+            title: 'Marketplace',
+            text: 'Каталог товаров с карточками, сортировкой, быстрым просмотром и AI-чатом для поддержки.'
+          },
+          bistro: {
+            title: 'BistroFlow',
+            text: 'Мобильный интерфейс бронирования: выбор даты, времени, стола и короткое подтверждение заказа.'
+          }
+        },
         contact: {
           title: 'Есть задача?',
           subtitle: 'Напиши - разберемся.',
@@ -595,7 +823,7 @@
       },
       uk: {
         title: 'Progvex - Розробка під ключ',
-        nav: { home: 'Головна', services: 'Послуги', stack: 'Процес', contact: 'Контакт' },
+        nav: { home: 'Головна', services: 'Послуги', stack: 'Процес', portfolio: 'Портфоліо', contact: 'Контакт' },
         hero: {
           badge: 'Розробка без посередників - напряму з розробником',
           badgeMobile: 'Розробка без посередників',
@@ -651,6 +879,25 @@
             note2: 'Робимо фінальні правки за домовленістю та закриваємо задачу.'
           }
         },
+        portfolio: {
+          eyebrow: 'Портфоліо',
+          title: 'Проєкти',
+          subtitle: 'Приклади інтерфейсів, які можна зібрати під твою задачу.',
+          cta: 'Перейти',
+          privateCta: 'Проєкт під NDA',
+          derma: {
+            title: 'DermaClear',
+            text: 'Лендінг для skincare-продукту з чистим першим екраном, великим візуалом і зрозумілим офером.'
+          },
+          marketplace: {
+            title: 'Marketplace',
+            text: 'Каталог товарів з картками, сортуванням, швидким переглядом і AI-чатом для підтримки.'
+          },
+          bistro: {
+            title: 'BistroFlow',
+            text: 'Мобільний інтерфейс бронювання: вибір дати, часу, столу та коротке підтвердження замовлення.'
+          }
+        },
         contact: {
           title: 'Є задача?',
           subtitle: 'Напиши - розберемося.',
@@ -663,7 +910,7 @@
       },
       en: {
         title: 'Progvex - Turnkey development',
-        nav: { home: 'Home', services: 'Services', stack: 'Process', contact: 'Contact' },
+        nav: { home: 'Home', services: 'Services', stack: 'Process', portfolio: 'Portfolio', contact: 'Contact' },
         hero: {
           badge: 'Development without middlemen - directly with the developer',
           badgeMobile: 'Development without middlemen',
@@ -717,6 +964,25 @@
             label: 'Step 03',
             note1: 'You receive a finished result that is ready to test and launch.',
             note2: 'We make final agreed edits and close the task cleanly.'
+          }
+        },
+        portfolio: {
+          eyebrow: 'Portfolio',
+          title: 'Projects',
+          subtitle: 'Interface examples that can be adapted to your task.',
+          cta: 'Open',
+          privateCta: 'NDA project',
+          derma: {
+            title: 'DermaClear',
+            text: 'A landing page for a skincare product with a clean first screen, strong visual, and clear offer.'
+          },
+          marketplace: {
+            title: 'Marketplace',
+            text: 'A product catalog with cards, sorting, quick preview, and an AI support chat.'
+          },
+          bistro: {
+            title: 'BistroFlow',
+            text: 'A mobile booking interface: date, time, table selection, and a short order confirmation.'
           }
         },
         contact: {
