@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Progvex - Разработка под ключ</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +15,20 @@
   <style>
     html {
       scroll-behavior: smooth;
+    }
+
+    #services,
+    #process,
+    #contact {
+      scroll-margin-top: 130px;
+    }
+
+    @media (max-width: 767px) {
+      #services,
+      #process,
+      #contact {
+        scroll-margin-top: 105px;
+      }
     }
 
     .font-fustat { font-family: 'Fustat', sans-serif; }
@@ -339,16 +354,14 @@
     <header class="sticky top-[30px] mx-auto w-full max-w-fit z-50 pt-2 mb-10 md:mb-14">
       <nav class="flex items-center justify-between gap-5 md:gap-10 px-5 md:px-6 py-3 bg-white/30 backdrop-blur-[50px] rounded-[16px] border border-black/10 glass-nav-shadow">
         <a href="#top" class="font-fustat text-xl tracking-tight text-slate-900 flex items-center gap-2">
-          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8 9l-4 3 4 3m8-6l4 3-4 3M14 5l-4 14"></path>
-          </svg>
+          <img src="logo.svg" alt="" aria-hidden="true" class="w-5 h-5 -translate-y-[1px]">
           Progvex
         </a>
 
         <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
           <a href="#top" class="hover:text-black transition-colors" data-i18n="nav.home">Главная</a>
           <a href="#services" class="hover:text-black transition-colors" data-i18n="nav.services">Услуги</a>
-          <a href="#process" class="hover:text-black transition-colors" data-i18n="nav.stack">Стек</a>
+          <a href="#process" class="hover:text-black transition-colors" data-i18n="nav.stack">Процесс</a>
           <a href="#contact" class="hover:text-black transition-colors" data-i18n="nav.contact">Контакт</a>
         </div>
 
@@ -365,7 +378,8 @@
         <div class="lg:col-span-7 flex flex-col items-start space-y-5 text-left">
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-100">
             <span class="w-2 h-2 rounded-full bg-[#0084FF]"></span>
-            <span class="text-xs font-medium text-slate-600 tracking-tight" data-i18n="hero.badge">Разработка без посредников - напрямую с разработчиком</span>
+            <span class="text-xs font-medium text-slate-600 tracking-tight hidden sm:inline" data-i18n="hero.badge">Разработка без посредников - напрямую с разработчиком</span>
+            <span class="text-xs font-medium text-slate-600 tracking-tight sm:hidden" data-i18n="hero.badgeMobile">Разработка без посредников</span>
           </div>
 
           <h1 class="font-fustat text-5xl md:text-[68px] font-bold text-slate-950 leading-[1.05] tracking-[-2px]" data-i18n="hero.title">
@@ -513,9 +527,10 @@
     const translations = {
       ru: {
         title: 'Progvex - Разработка под ключ',
-        nav: { home: 'Главная', services: 'Услуги', stack: 'Стек', contact: 'Контакт' },
+        nav: { home: 'Главная', services: 'Услуги', stack: 'Процесс', contact: 'Контакт' },
         hero: {
           badge: 'Разработка без посредников - напрямую с разработчиком',
+          badgeMobile: 'Разработка без посредников',
           title: 'Пишешь задачу -<br class="hidden md:inline">получаешь продукт',
           subtitle: 'Лендинги, Telegram Mini Apps, боты и веб-приложения. Четко, в срок, без лишних слов.',
           cta: 'Обсудить проект'
@@ -575,14 +590,15 @@
         },
         footer: {
           trust: 'Нам доверяют продуктовые команды и цифровые проекты',
-          copy: '© 2025 Progvex · Разработка под ключ'
+          copy: '© 2026 Progvex · Разработка под ключ'
         }
       },
       uk: {
         title: 'Progvex - Розробка під ключ',
-        nav: { home: 'Головна', services: 'Послуги', stack: 'Стек', contact: 'Контакт' },
+        nav: { home: 'Головна', services: 'Послуги', stack: 'Процес', contact: 'Контакт' },
         hero: {
           badge: 'Розробка без посередників - напряму з розробником',
+          badgeMobile: 'Розробка без посередників',
           title: 'Пишеш задачу -<br class="hidden md:inline">отримуєш продукт',
           subtitle: 'Лендінги, Telegram Mini Apps, боти та веб-застосунки. Чітко, вчасно, без зайвих слів.',
           cta: 'Обговорити проєкт'
@@ -642,14 +658,15 @@
         },
         footer: {
           trust: 'Нам довіряють продуктові команди та цифрові проєкти',
-          copy: '© 2025 Progvex · Розробка під ключ'
+          copy: '© 2026 Progvex · Розробка під ключ'
         }
       },
       en: {
         title: 'Progvex - Turnkey development',
-        nav: { home: 'Home', services: 'Services', stack: 'Stack', contact: 'Contact' },
+        nav: { home: 'Home', services: 'Services', stack: 'Process', contact: 'Contact' },
         hero: {
           badge: 'Development without middlemen - directly with the developer',
+          badgeMobile: 'Development without middlemen',
           title: 'Send the task -<br class="hidden md:inline">get the product',
           subtitle: 'Landing pages, Telegram Mini Apps, bots, and web applications. Clear, on time, without extra noise.',
           cta: 'Discuss project'
@@ -709,7 +726,7 @@
         },
         footer: {
           trust: 'Trusted by product teams and digital projects',
-          copy: '© 2025 Progvex · Turnkey development'
+          copy: '© 2026 Progvex · Turnkey development'
         }
       }
     };
